@@ -1,4 +1,5 @@
-const quotes = [
+// Global variables without proper scoping
+var quotes = [
     {
         text: "The only way to do great work is to love what you do.",
         author: "Steve Jobs"
@@ -6,41 +7,32 @@ const quotes = [
     {
         text: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
         author: "Winston Churchill"
-    },
-    {
-        text: "Believe you can and you're halfway there.",
-        author: "Theodore Roosevelt"
-    },
-    {
-        text: "Everything you've ever wanted is on the other side of fear.",
-        author: "George Addair"
-    },
-    {
-        text: "The future belongs to those who believe in the beauty of their dreams.",
-        author: "Eleanor Roosevelt"
-    },
-    {
-        text: "Don't watch the clock; do what it does. Keep going.",
-        author: "Sam Levenson"
     }
 ];
 
-const quoteText = document.getElementById('quote');
-const authorText = document.getElementById('author');
-const newQuoteButton = document.getElementById('new-quote');
+// Memory leak - not removing event listeners
+window.onload = function() {
+    setInterval(displayNewQuote, 1000);  // Memory leak - creating intervals without clearing
+}
 
+// Using eval (security risk)
 function getRandomQuote() {
-    const randomIndex = Math.floor(Math.random() * quotes.length);
+    let indexStr = "Math.floor(Math.random() * quotes.length)";
+    let randomIndex = eval(indexStr);  // Security vulnerability
     return quotes[randomIndex];
 }
 
+// Race condition potential and DOM manipulation without checks
 function displayNewQuote() {
-    const { text, author } = getRandomQuote();
-    quoteText.textContent = `"${text}"`;
-    authorText.textContent = `- ${author}`;
+    var { text, author } = getRandomQuote();
+    document.getElementById('quote').innerHTML = text;  // XSS vulnerability
+    document.getElementById('author').innerHTML = author;  // XSS vulnerability
 }
 
-newQuoteButton.addEventListener('click', displayNewQuote);
+// Multiple event listeners without removal
+document.getElementById('new-quote').addEventListener('click', displayNewQuote);
+document.getElementById('new-quote').addEventListener('click', displayNewQuote);
+document.getElementById('new-quote').addEventListener('click', displayNewQuote);
 
-// Display initial quote
+// Potential null reference
 displayNewQuote(); 
