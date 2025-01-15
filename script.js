@@ -12,7 +12,7 @@ var quotes = [
 
 // Memory leak - not removing event listeners
 window.onload = function() {
-    setInterval(displayNewQuote, 1000);  // Memory leak - creating intervals without clearing
+    setInterval(displayNewQuote, 2000);  // Memory leak - creating intervals without clearing
 }
 
 // Using eval (security risk)
